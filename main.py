@@ -20,7 +20,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # ─────────────────────────────────────────────
-# Device
+# Devic
 # ─────────────────────────────────────────────
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 IMG_SIZE = 50
@@ -28,7 +28,7 @@ LATENT_DIM = 64
 CHANNELS = 3
 
 # ─────────────────────────────────────────────
-# Generator
+# Genaratr
 # ─────────────────────────────────────────────
 class Generator(nn.Module):
     def __init__(self, latent_dim, channels, img_size):
@@ -59,7 +59,7 @@ class Generator(nn.Module):
         return img
 
 # ─────────────────────────────────────────────
-# Discriminator
+# Diskiymator
 # ─────────────────────────────────────────────
 class Discriminator(nn.Module):
     def __init__(self, channels, img_size):
@@ -79,7 +79,7 @@ class Discriminator(nn.Module):
             nn.Flatten(),
         )
 
-        # Calculate flatten size dynamically
+    
         dummy = torch.zeros(1, channels, img_size, img_size)
         flat_size = self.model(dummy).shape[1]
 
@@ -94,7 +94,7 @@ class Discriminator(nn.Module):
         return validity
 
 # ─────────────────────────────────────────────
-# Dataset
+# Dotoset
 # ─────────────────────────────────────────────
 class LabeledImageDataset(Dataset):
     def __init__(self, images, transform=None):
@@ -111,13 +111,13 @@ class LabeledImageDataset(Dataset):
         return img
 
 # ─────────────────────────────────────────────
-# Main App
+# main a pp
 # ─────────────────────────────────────────────
 class GANApp:
     def __init__(self):
-        self.images_data = {}      # {label: [PIL images]}
-        self.generators = {}       # {label: Generator}
-        self.discriminators = {}   # {label: Discriminator}
+        self.images_data = {}      
+        self.generators = {}      
+        self.discriminators = {}   
         self.training_log = []
         self.current_label = None
         self.epochs_per_train = 50
@@ -137,26 +137,26 @@ class GANApp:
         self.fig = plt.figure(figsize=(16, 10), facecolor="#0d0d0d")
         self.fig.canvas.manager.set_window_title("🎨 GAN Image Generator")
 
-        # Title
+        # taytl
         self.fig.text(0.5, 0.97, "🎨 GAN Image Generator | PyTorch + Matplotlib",
                       ha='center', va='top', fontsize=15, color='white',
                       fontweight='bold', fontfamily='monospace')
 
-        # ── Left panel: Input image display ──
+        # ── Left panel
         self.ax_input = self.fig.add_axes([0.02, 0.55, 0.25, 0.35])
         self.ax_input.set_facecolor("#1a1a2e")
         self.ax_input.set_title("📂 Yuklangan Rasm", color='#00d4ff', fontsize=10, pad=8)
         self.ax_input.axis('off')
         self._show_placeholder(self.ax_input, "Rasm yuklanmagan")
 
-        # ── Middle: Generated image display ──
+        # ── Midl
         self.ax_gen = self.fig.add_axes([0.38, 0.55, 0.25, 0.35])
         self.ax_gen.set_facecolor("#1a1a2e")
         self.ax_gen.set_title("✨ Generatsiya qilingan rasm", color='#ff6b9d', fontsize=10, pad=8)
         self.ax_gen.axis('off')
         self._show_placeholder(self.ax_gen, "Hali generatsiya qilinmagan")
 
-        # ── Right: Training chart ──
+        # ── Right
         self.ax_loss = self.fig.add_axes([0.68, 0.55, 0.30, 0.35])
         self.ax_loss.set_facecolor("#0d0f1a")
         self.ax_loss.set_title("📈 Training Loss", color='#ffe066', fontsize=10, pad=8)
@@ -167,7 +167,7 @@ class GANApp:
         self.g_losses = []
         self.d_losses = []
 
-        # ── Log area ──
+        
         self.ax_log = self.fig.add_axes([0.02, 0.10, 0.96, 0.38])
         self.ax_log.set_facecolor("#111")
         self.ax_log.axis('off')
@@ -176,54 +176,54 @@ class GANApp:
                                           va='top', ha='left', fontsize=7.5, color='#00ff88',
                                           fontfamily='monospace', wrap=True)
 
-        # ── Buttons ──
-        # Load image button
+        # ── Buton ──
+       
         ax_load = self.fig.add_axes([0.02, 0.02, 0.14, 0.05])
         self.btn_load = Button(ax_load, "📂 Rasm Yuklash", color='#1e3a5f', hovercolor='#2a5298')
         self.btn_load.label.set_color('white')
         self.btn_load.label.set_fontsize(9)
         self.btn_load.on_clicked(self._on_load)
 
-        # Label text box
+        
         ax_label_box = self.fig.add_axes([0.18, 0.02, 0.12, 0.05])
         self.txt_label = TextBox(ax_label_box, 'Label: ', initial='car',
                                   color='#1a1a2e', hovercolor='#2a2a4e')
         self.txt_label.label.set_color('white')
         self.txt_label.text_disp.set_color('#00d4ff')
 
-        # Epochs slider
+        
         ax_epochs = self.fig.add_axes([0.32, 0.025, 0.12, 0.035])
         self.slider_epochs = Slider(ax_epochs, 'Epochs ', 10, 500,
                                      valinit=50, valstep=10, color='#ff6b9d')
         self.slider_epochs.label.set_color('white')
         self.slider_epochs.valtext.set_color('#ff6b9d')
 
-        # Train button
+       
         ax_train = self.fig.add_axes([0.46, 0.02, 0.14, 0.05])
         self.btn_train = Button(ax_train, "🧠 O'rgatish", color='#1a3d1a', hovercolor='#2d7a2d')
         self.btn_train.label.set_color('#00ff88')
         self.btn_train.label.set_fontsize(9)
         self.btn_train.on_clicked(self._on_train)
 
-        # Generate button
+        
         ax_gen = self.fig.add_axes([0.62, 0.02, 0.14, 0.05])
         self.btn_gen = Button(ax_gen, "✨ Generate", color='#3d1a3d', hovercolor='#7a2d7a')
         self.btn_gen.label.set_color('#ff6b9d')
         self.btn_gen.label.set_fontsize(9)
         self.btn_gen.on_clicked(self._on_generate)
 
-        # Save button
+        
         ax_save = self.fig.add_axes([0.78, 0.02, 0.10, 0.05])
         self.btn_save = Button(ax_save, "💾 Saqlash", color='#3d2a00', hovercolor='#7a5500')
         self.btn_save.label.set_color('#ffe066')
         self.btn_save.label.set_fontsize(9)
         self.btn_save.on_clicked(self._on_save)
 
-        # Status bar
+        
         self.status_text = self.fig.text(0.5, 0.005, "✅ Tayyor | Rasm yuklang va label kiriting",
                                           ha='center', fontsize=8, color='#888', fontfamily='monospace')
 
-        # Info box
+        
         info = ("💡 Qo'llanma:\n"
                 "1️⃣  'Rasm Yuklash' → rasm tanlang\n"
                 "2️⃣  Label kiriting (masalan: car)\n"
@@ -236,9 +236,7 @@ class GANApp:
 
         plt.show()
 
-    # ──────────────────────────────────────
-    # Helpers
-    # ──────────────────────────────────────
+   
     def _show_placeholder(self, ax, msg):
         ax.clear()
         ax.set_facecolor("#1a1a2e")
@@ -250,7 +248,7 @@ class GANApp:
 
     def _log(self, msg):
         self.training_log.append(msg)
-        # Keep last 20 lines
+        
         lines = self.training_log[-20:]
         self.log_text.set_text("\n".join(lines))
         self.fig.canvas.draw_idle()
@@ -280,9 +278,7 @@ class GANApp:
 
         self.fig.canvas.draw_idle()
 
-    # ──────────────────────────────────────
-    # Load Image
-    # ──────────────────────────────────────
+    
     def _on_load(self, event):
         try:
             import tkinter as tk
@@ -304,13 +300,13 @@ class GANApp:
             filename = os.path.basename(path)
             label = self.txt_label.text.strip() or "unknown"
 
-            # Store
+            
             if label not in self.images_data:
                 self.images_data[label] = []
             self.images_data[label].append(img)
             self.current_label = label
 
-            # Display
+           
             self.ax_input.clear()
             self.ax_input.set_facecolor("#1a1a2e")
             self.ax_input.axis('off')
@@ -328,7 +324,7 @@ class GANApp:
             self._log(f"❌ Xato: {e}")
 
     # ──────────────────────────────────────
-    # Train
+    # Trayn
     # ──────────────────────────────────────
     def _on_train(self, event):
         label = self.txt_label.text.strip() or "unknown"
@@ -346,7 +342,7 @@ class GANApp:
         self._log(f"   Rasmlar soni: {len(self.images_data[label])}")
         self._set_status(f"⏳ O'rgatilmoqda... (0/{epochs})", '#ffe066')
 
-        # Build dataset (augment by repeating)
+        
         imgs = self.images_data[label]
         repeat = max(1, 100 // len(imgs))
         all_imgs = imgs * repeat
@@ -354,11 +350,11 @@ class GANApp:
         dataset = LabeledImageDataset(all_imgs, transform=self.transform)
         loader = DataLoader(dataset, batch_size=min(8, len(all_imgs)), shuffle=True, drop_last=False)
 
-        # Init models
+        
         G = Generator(LATENT_DIM, CHANNELS, IMG_SIZE).to(DEVICE)
         D = Discriminator(CHANNELS, IMG_SIZE).to(DEVICE)
 
-        # If pretrained exists, load weights
+       
         if label in self.generators:
             G.load_state_dict(self.generators[label].state_dict())
             D.load_state_dict(self.discriminators[label].state_dict())
@@ -380,10 +376,10 @@ class GANApp:
                 real_imgs = real_imgs.to(DEVICE)
                 b = real_imgs.size(0)
 
-                real_labels = torch.ones(b, 1).to(DEVICE) * 0.9   # label smoothing
+                real_labels = torch.ones(b, 1).to(DEVICE) * 0.9   
                 fake_labels = torch.zeros(b, 1).to(DEVICE)
 
-                # ── Train Discriminator ──
+                
                 z = torch.randn(b, LATENT_DIM).to(DEVICE)
                 fake_imgs = G(z).detach()
 
@@ -394,7 +390,7 @@ class GANApp:
                 d_loss.backward()
                 opt_D.step()
 
-                # ── Train Generator ──
+               
                 G.zero_grad()
                 z = torch.randn(b, LATENT_DIM).to(DEVICE)
                 gen_imgs = G(z)
@@ -411,7 +407,7 @@ class GANApp:
             self.g_losses.append(avg_g)
             self.d_losses.append(avg_d)
 
-            # Log every 10 epochs
+            
             if epoch % max(1, epochs // 10) == 0 or epoch == 1 or epoch == epochs:
                 bar_done = int(20 * epoch / epochs)
                 bar = "█" * bar_done + "░" * (20 - bar_done)
@@ -420,7 +416,7 @@ class GANApp:
                 self._set_status(f"⏳ O'rgatilmoqda: {epoch}/{epochs} epochs ({pct:.0f}%)", '#ffe066')
                 self._update_loss_chart()
 
-        # Save models
+        
         self.generators[label] = G
         self.discriminators[label] = D
 
@@ -430,7 +426,7 @@ class GANApp:
         self._update_loss_chart()
 
     # ──────────────────────────────────────
-    # Generate
+    # Generat
     # ──────────────────────────────────────
     def _on_generate(self, event):
         label = self.txt_label.text.strip() or self.current_label
@@ -466,7 +462,7 @@ class GANApp:
         G.train()
 
     # ──────────────────────────────────────
-    # Save
+    # savee
     # ──────────────────────────────────────
     def _on_save(self, event):
         if not hasattr(self, 'last_generated'):
