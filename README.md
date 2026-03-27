@@ -12,7 +12,7 @@
 ## 🌟 Gallery
 After 200+ train images:
 
-| 🌅 Tabiat manzarasi | 🤖 Futuristik Robot | 🎨 Abstrakt San'at |
+| 🌅 Tabiat manzarasi | 🎨 Abstrakt San'at | 🤖 Futuristik Robot |
 | :---: | :---: | :---: |
 | <img src="https://i.redd.it/79pyeyh73f921.jpg" width="250"> | <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTikxfZNonMRr-k4WO-8MqGd0J9E-CNSlpZg&s" width="250"> | <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrsmawy0qLflLHjrpCsJ-DdSZssnG3m6vR7g&s" width="250"> |
 | *Prompt: "A tree, sunset, mountains, beatiful nature"* | *Prompt: "blue car"* | *Prompt: "robot cyberpunk"* |
